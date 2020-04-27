@@ -26,3 +26,14 @@ Weather Observation Station 18
 SELECT ROUND(ABS(MIN(LAT_N) - MAX(LAT_N)) + ABS(MIN(LONG_W) - MAX(LONG_W)), 4)
 FROM station
 ```
+
+Average Population of Each Continent
+```
+SELECT country.continent, FLOOR(AVG(city.population))
+FROM city
+INNER JOIN country 
+ON city.countrycode = country.code
+GROUP BY country.continent
+```
+
+
