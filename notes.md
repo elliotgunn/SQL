@@ -65,5 +65,20 @@ SELECT id, COALESCE(firstname, middlename, lastname) as name
 FROM employee
 ```
 
+## CAST & CONVERT
+- converts a value to a specified datatype 
+- CONVERT has an additional style parameter
+
+Both these queries evaluate to the same output:
 ```
+SELECT id, name, birthday, CAST(birthday as nvarchar) as convertedbirthday
+FROM employees
+```
+
+```
+SELECT id, name, birthday, CONVERT(nvarchar, birthday) as convertedbirthday
+FROM employees
+```
+
+
 
