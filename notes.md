@@ -1,4 +1,4 @@
-## Views
+## VIEW
 - database object that is of a stored query, simplifies the complexity of a query
 
 Using a view
@@ -31,7 +31,7 @@ Delete view:
 DROP VIEW view-name
 ```
 
-## Case
+## CASE
 - goes through conditions and returns a value when the first condition is met
 - like IF-THEN-ELSE statement
 
@@ -57,7 +57,7 @@ FROM products
 ORDER BY Expense
 ```
 
-## Coalesce
+## COALESCE
 - returns the first non null value in a list
 
 ```
@@ -80,5 +80,19 @@ SELECT id, name, birthday, CONVERT(nvarchar, birthday) as convertedbirthday
 FROM employees
 ```
 
+## IF & NULLIF
+- IF: evaluates to a true and false value in the parameters
 
+```
+SELECT movieid, movietitle
+IF (movietitle LIKE '%the%', 'THE MOVIE', NULL) AS message
+FROM movies
+```
 
+- NULLIF: returns a null value if the two expressions are equal 
+
+```
+SELECT movieid, movietitle
+NULLIF (genreid, 2) AS scifi_null
+FROM movies
+```
