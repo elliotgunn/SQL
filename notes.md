@@ -31,4 +31,30 @@ Delete view:
 DROP VIEW view-name
 ```
 
-## 
+## Case
+- goes through conditions and returns a value when the first condition is met
+- like IF-THEN-ELSE statement
+
+Case: specific column
+```
+SELECT name, CASE country
+              WHEN 'Ger' then 'German'
+              WHEN 'Mexico' then 'Mexican'
+              ELSE 'Not known'
+              END AS nationality
+FROM customers
+ORDER BY nationality
+```
+
+Case: no specific column
+```
+SELECT productid, CASE
+                    WHEN unitprice < 20 THEN 'Cheap'
+                    WHEN unitprice < 80 THEN 'Moderate'
+                    ELSE 'Expensive'
+                    END AS Expense
+FROM products
+ORDER BY Expense
+```
+
+
