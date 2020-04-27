@@ -57,4 +57,13 @@ FROM products
 ORDER BY Expense
 ```
 
+## Coalesce
+- returns the first non null value in a list
+
+```
+SELECT id, COALESCE(firstname, middlename, lastname) as name
+FROM employee
+```
+
+```
 
