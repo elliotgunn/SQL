@@ -20,3 +20,9 @@ SELECT ROUND(LONG_W, 4)
 FROM station
 WHERE LAT_N = (SELECT MAX(LAT_N) FROM station WHERE LAT_N < 137.2345) 
 ```
+
+Weather Observation Station 18
+```
+SELECT ROUND(ABS(MIN(LAT_N) - MAX(LAT_N)) + ABS(MIN(LONG_W) - MAX(LONG_W)), 4)
+FROM station
+```
