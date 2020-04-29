@@ -36,4 +36,18 @@ ON city.countrycode = country.code
 GROUP BY country.continent
 ```
 
+Weather Observation Station 20
+- this clever solution only works for odd numbers
+```
+SELECT ROUND(S.LAT_N, 4) median 
+FROM station S 
+WHERE
+  (SELECT COUNT(Lat_N) FROM station WHERE Lat_N < S.LAT_N ) = 
+  (SELECT COUNT(Lat_N) FROM station WHERE Lat_N > S.LAT_N)
+```
+
+
+
+
+
 
