@@ -46,7 +46,20 @@ WHERE
   (SELECT COUNT(Lat_N) FROM station WHERE Lat_N > S.LAT_N)
 ```
 
-
+Contest Leaderboard 
+- really excellent problem that tests knowledge of groupby, subquery, ordering, aggreg
+```
+SELECT m.hacker_id, h.name, SUM(m.score) AS total_score
+FROM
+    (SELECT s.hacker_id, s.challenge_id, MAX(s.score) AS score
+    FROM submissions as s
+    GROUP BY s.hacker_id, s.challenge_id) AS m
+INNER JOIN hackers as h 
+ON m.hacker_id = h.hacker_id
+GROUP BY m.hacker_id, h.name
+HAVING total_score > 0 
+ORDER BY total_score DESC, hacker_id ASC
+```
 
 
 
