@@ -61,6 +61,15 @@ HAVING total_score > 0
 ORDER BY total_score DESC, hacker_id ASC
 ```
 
-
-
+Placements
+- great problem about joining three tables
+```
+SELECT s.Name
+FROM students as s
+JOIN friends as f ON s.id = f.id
+JOIN packages p1 ON s.id = p1.id
+JOIN packages p2 ON f.friend_id = p2.id
+WHERE p2.salary > p1.salary
+ORDER BY p2.salary
+```
 
