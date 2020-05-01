@@ -73,3 +73,17 @@ WHERE p2.salary > p1.salary
 ORDER BY p2.salary
 ```
 
+New Companies
+- great problem for advanced select
+```
+SELECT c.company_code, c.founder, COUNT(DISTINCT l.lead_manager_code), 
+      COUNT(DISTINCT s.senior_manager_code),        
+      COUNT(DISTINCT m.manager_code), COUNT(DISTINCT e.employee_code)
+FROM company c, lead_manager l, senior_manager s, manager m, employee e
+WHERE c.company_code = l.company_code
+    AND s.lead_manager_code = l.lead_manager_code
+    AND s.senior_manager_code = m.senior_manager_code
+    AND e.manager_code = m.manager_code
+GROUP BY c.company_code, c.founder
+ORDER BY c.company_code
+```
