@@ -87,3 +87,17 @@ WHERE c.company_code = l.company_code
 GROUP BY c.company_code, c.founder
 ORDER BY c.company_code
 ```
+
+The Report
+- good example for testing CASE and ORDER BY
+```
+SELECT (CASE 
+            WHEN g.grade < 8 THEN 'NULL'
+            ELSE s.name
+            END), g.grade, s.marks
+FROM students s
+INNER JOIN grades g
+ON s.marks 
+BETWEEN g.min_mark AND g.max_mark
+ORDER BY g.grade DESC, s.name, s.marks
+```
