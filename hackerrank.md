@@ -171,3 +171,22 @@ FROM (
       ) temp
 GROUP BY row_number
 ```
+
+Top Competitors
+- basic joins 
+- then filter to ensure (1) full scores in the correct (2) difficulty level
+- GROUP BY so that we can COUNT > 1 full score
+- remember: can't select a column if it's not in the GROUP BY condition
+```
+SELECT s.hacker_id, h.name
+FROM submissions s
+    JOIN challenges c ON s.challenge_id = c.challenge_id
+    JOIN difficulty d ON d.difficulty_level = c.difficulty_level
+    JOIN hackers h ON s.hacker_id = h.hacker_id  
+WHERE s.score = d.score
+    AND c.difficulty_level = d.difficulty_level
+GROUP BY h.hacker_id, h.name
+HAVING COUNT(s.hacker_id) > 1
+ORDER BY COUNT(s.hacker_id) DESC,
+         s.hacker_id ASC
+```
