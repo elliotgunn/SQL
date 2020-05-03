@@ -122,3 +122,52 @@ FROM functions f1, functions f2
 WHERE f1.X <> f1.Y AND f1.X = f2.Y AND f1.Y = f2.X AND f1.X < f2.X
 ORDER BY X
 ```
+
+Occupations
+- pivot problem 
+- this is tricky because the draft solution creates many nulls in the columns
+- if you reshape occupation into their four columns it creats many NULLs
+```
+SELECT CASE 
+            WHEN occupation =  'Doctor' THEN name
+            END as Doctor,
+        CASE 
+            WHEN occupation =  'Professor' THEN name
+            END as Professor,
+        CASE 
+            WHEN occupation =  'Singer' THEN name
+            END as Singer,
+        CASE 
+            WHEN occupation =  'Actor' THEN name
+            END as Actor  
+FROM occupations
+ORDER BY Doctor, Professor, Singer, Actor
+```
+- So we want to create a temp table with `row_number`, `doctor`, `professor` etc. as columns
+- Then query that using min() and groupby:
+    - using MAX() or MIN() can get the first non-null value after GROUP BY. it will return a name for specific index and  specific occupation. if there is no name, it returns NULL. 
+    - so we can aggregate rows together by the row number
+```
+SET @r1=0, @r2=0, @r3=0, @r4=0;
+
+SELECT MIN(Doctor), MIN(Professor), MIN(Singer), MIN(Actor)
+FROM (
+      SELECT CASE
+                WHEN occupation='Doctor' THEN (@r1:=@r1+1)
+                WHEN occupation='Professor' THEN (@r2:=@r2+1)
+                WHEN occupation='Singer' THEN (@r3:=@r3+1)
+                WHEN occupation='Actor' THEN (@r4:=@r4+1)
+                END AS row_number,
+             CASE
+                WHEN occupation='Doctor' THEN name END AS Doctor,
+            CASE
+                WHEN occupation='Professor' THEN name END AS Professor,
+            CASE 
+                WHEN occupation='Singer' THEN name END AS Singer,
+            CASE 
+                WHEN occupation='Actor' THEN name END AS Actor
+      FROM occupations
+      ORDER BY name
+      ) temp
+GROUP BY row_number
+```
