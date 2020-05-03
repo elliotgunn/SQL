@@ -29,3 +29,33 @@ FROM new_table a
 JOIN new_table b 
 ON a.month = b.month - 1
 ```
+
+2. Write SQL such that we label each node as a “leaf”, “inner” or “Root” node.
+
+```
+node   parent
+1       2
+2       5
+3       5
+4       3
+5       NULL 
+```
+
+Such that we get:
+```
+node    label  
+1       Leaf
+2       Inner
+3       Inner
+4       Leaf
+5       Root
+```
+
+```
+SELECT node, CASE
+                WHEN parent is 'NULL' THEN 'Root'
+                WHEN node NOT IN (SELECT parent FROM tree) THEN 'Leaf'
+                ELSE 'Inner' 
+                END AS label
+FROM tree
+```
