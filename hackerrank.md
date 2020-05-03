@@ -103,3 +103,22 @@ ORDER BY g.grade DESC,
          s.name ASC, 
          s.marks ASC
 ```
+
+Symmetric Pairs
+- tough one 
+- UNION: removes duplicate rows
+- the first query returns for the condition where: x equals y, if (x, y) appears twice, it is included
+- the second query uses two tables to iterate through all the records and returns for the condition where: x is not equal to y, and symmetric pairs, and exclude duplicates e.g. (20,21) and (21,20) are a symmetric pair but we only want the smaller x
+```
+SELECT f1.X, f1.Y 
+FROM functions as f1
+WHERE f1.X = f1.Y
+AND (SELECT COUNT(*) 
+     FROM functions 
+     WHERE X = f1.X AND Y = f1.X) > 1
+UNION
+SELECT f1.X, f1.Y 
+FROM functions f1, functions f2
+WHERE f1.X <> f1.Y AND f1.X = f2.Y AND f1.Y = f2.X AND f1.X < f2.X
+ORDER BY X
+```
