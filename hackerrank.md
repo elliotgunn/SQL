@@ -190,3 +190,24 @@ HAVING COUNT(s.hacker_id) > 1
 ORDER BY COUNT(s.hacker_id) DESC,
          s.hacker_id ASC
 ```
+
+Ollivander's Inventory
+- joins
+- the first part is self-explanatory
+- then we want to filter by only `is_evil` = 0
+- and then we want to find the lowest price for wands at the same age & power
+```
+SELECT w.id, wp.age, w.coins_needed, w.power
+FROM wands w
+JOIN wands_property wp
+ON w.code = wp.code
+WHERE wp.is_evil = 0 
+    AND w.coins_needed = (SELECT MIN(coins_needed)
+                          FROM wands w2
+                          JOIN wands_property wp2
+                          ON w2.code = wp2.code
+                          WHERE w.power = w2.power
+                          AND wp.age = wp2.age)
+ORDER BY w.power DESC,
+         wp.age DESC
+```
