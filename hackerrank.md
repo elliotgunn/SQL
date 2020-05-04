@@ -46,6 +46,53 @@ WHERE
   (SELECT COUNT(Lat_N) FROM station WHERE Lat_N > S.LAT_N)
 ```
 
+Challenges
+- pretty tricky join
+
+- create a table aggregating the total challenges created per individual. then exclude individuals who created the same number of challenges that is not the maximum number of challenges. this should output individuals with either: the total number of challenges created is the maximum, or the number of challenges appears once.
+
+- first, include students whose output is the maximum total number of challenges created 
+```
+SELECT h.hacker_id, h.name, COUNT(c.challenge_id) AS total
+FROM hackers h
+JOIN challenges c
+ON h.hacker_id = c.challenge_id
+GROUP BY h.hacker_id, h.name
+HAVING total = (SELECT COUNT(c2.challenge_id)
+                FROM challenges c2
+                GROUP BY c2.hacker_id
+                ORDER BY COUNT(*) DESC
+                LIMIT 1)
+ORDER BY total DESC
+```
+
+- second, include students whose output only appears once
+- the NOT IN filters for 
+```
+SELECT c.hacker_id, h.name, COUNT(c.challenge_id) AS total
+FROM hackers h
+JOIN challenges c
+ON h.hacker_id = c.hacker_id
+GROUP BY h.hacker_id, h.name
+HAVING total = (SELECT COUNT(c2.challenge_id)
+                FROM challenges c2
+                GROUP BY c2.hacker_id
+                ORDER BY COUNT(*) DESC
+                LIMIT 1) 
+    OR total NOT IN (SELECT COUNT(c3.challenge_id)
+                 FROM challenges c3
+                 GROUP BY c3.hacker_id
+                 HAVING c3.hacker_id <> c.hacker_id)
+ORDER BY total DESC;
+         hacker_id ASC
+```
+
+
+
+
+
+
+
 Contest Leaderboard 
 - really excellent problem that tests knowledge of groupby, subquery, ordering, aggreg
 ```
@@ -223,7 +270,7 @@ WHERE Start_Date
 NOT IN (SELECT End_Date FROM Projects);
 ```
 
-Second, if `end_date` appears in `start_date, we can also exclude it as an `end_date` for a project. So we want to find the `end_date`s excluded, since this would indicate they are project `end_date`s. 
+Second, if `end_date` appears in `start_date`, we can also exclude it as an `end_date` for a project. So we want to find the `end_date`s excluded, since this would indicate they are project `end_date`s. 
 ```
 SELECT End_Date 
 FROM Projects 
