@@ -211,3 +211,45 @@ WHERE wp.is_evil = 0
 ORDER BY w.power DESC,
          wp.age DESC
 ```
+
+SQL Project Planning
+- advanced join
+
+First, if `start_date` appears in `end_date`, we can exclude it as an `end_date` for a project. So we want to find the `start_date`s excluded, since this would indicate they are project `start_date`s. 
+```
+SELECT Start_Date 
+FROM Projects 
+WHERE Start_Date 
+NOT IN (SELECT End_Date FROM Projects);
+```
+
+Second, if `end_date` appears in `start_date, we can also exclude it as an `end_date` for a project. So we want to find the `end_date`s excluded, since this would indicate they are project `end_date`s. 
+```
+SELECT End_Date 
+FROM Projects 
+WHERE End_Date 
+NOT IN (SELECT Start_Date FROM Projects);
+```
+
+Third, we cross join these two tables to generate all potential pairs. We first filter them down logically by picking only pairs where `start_date` < `end_date`. But this still gives us many potential pairs. So then we GROUP BY `start_date`, and then pick the `MIN(end_date)` to get the correct pair.
+```
+SELECT start_date, MIN(end_date)
+FROM 
+    (SELECT start_date FROM projects WHERE start_date NOT IN (SELECT end_date FROM projects)) a,
+    (SELECT end_date FROM projects WHERE end_date NOT IN (SELECT start_date FROM projects)) b 
+WHERE start_date < end_date
+GROUP BY start_date
+```
+
+Finally, sort by number of days in ascending order, then by `start_date`:
+```
+SELECT start_date, MIN(end_date)
+FROM 
+    (SELECT start_date FROM projects WHERE start_date NOT IN (SELECT end_date FROM projects)) a,
+    (SELECT end_date FROM projects WHERE end_date NOT IN (SELECT start_date FROM projects)) b 
+WHERE start_date < end_date
+GROUP BY start_date
+ORDER BY DATEDIFF(MIN(end_date), start_date) ASC,
+         start_date ASC
+```
+
