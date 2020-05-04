@@ -195,7 +195,7 @@ Ollivander's Inventory
 - joins
 - the first part is self-explanatory
 - then we want to filter by only `is_evil` = 0
-- and then we want to find the lowest price for wands at the same age & power
+- and then we want to find the lowest price for wands at the same `age` & `power`
 ```
 SELECT w.id, wp.age, w.coins_needed, w.power
 FROM wands w
