@@ -67,7 +67,8 @@ ORDER BY total DESC
 ```
 
 - second, include students whose output only appears once
-- the NOT IN filters for 
+- the NOT IN filters against duplicate output numbers (if the student's output is the same as all other student's outputs)
+- the `HAVING c3.hacker_id <> c.hacker_id` condition filters the same total output but across *different* `hacker_id`s
 ```
 SELECT c.hacker_id, h.name, COUNT(c.challenge_id) AS total
 FROM hackers h
@@ -83,15 +84,9 @@ HAVING total = (SELECT COUNT(c2.challenge_id)
                  FROM challenges c3
                  GROUP BY c3.hacker_id
                  HAVING c3.hacker_id <> c.hacker_id)
-ORDER BY total DESC;
-         hacker_id ASC
+ORDER BY total DESC,
+         c.hacker_id ASC
 ```
-
-
-
-
-
-
 
 Contest Leaderboard 
 - really excellent problem that tests knowledge of groupby, subquery, ordering, aggreg
