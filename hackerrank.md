@@ -331,24 +331,27 @@ GROUP BY c.contest_id, c.hacker_id, c.name;
 
 Finally, exclude results if all their sums are 0:
 ```
-SELECT c.contest_id, c.hacker_id, c.name, SUM(ss2.total_submissions), 
-       SUM(ss2.total_accepted_submissions), SUM(vs2.total_views), SUM(vs2.total_unique_views)
-FROM contests c
-JOIN colleges col ON c.contest_id = col.contest_id
-JOIN challenges ch ON ch.challenge_id = col.college_id
-LEFT JOIN (SELECT ss.challenge_id, SUM(ss.total_submissions) AS total_submissions, 
-                  SUM(ss.total_accepted_submissions) AS total_accepted submissions
-           FROM submission_stats ss
-           GROUP BY ss.challenge_id) AS ss2
-           ON ss2.challenge_id = ch.challenge_id
-LEFT JOIN (SELECT vs.challenge_id, SUM(vs.total_views) AS total_views, 
-                  SUM(vs.total_unique_views) AS total_unique_views
-           FROM view_stats vs
-           GROUP BY vs.challenge_id) as vs2
-           ON vs2.challenge_id = ch.challenge_id
+SELECT c.contest_id, c.hacker_id, c.name, 
+       SUM(ss2.total_submissions), SUM(ss2.total_accepted_submissions), 
+       SUM(vs2.total_views), SUM(vs2.total_unique_views)
+FROM Contests AS c
+JOIN Colleges AS col ON c.contest_id = col.contest_id
+JOIN Challenges AS cha ON cha.college_id = col.college_id
+LEFT JOIN
+    (SELECT ss.challenge_id, SUM(ss.total_submissions) AS total_submissions,           
+            SUM(ss.total_accepted_submissions) AS total_accepted_submissions 
+     FROM Submission_Stats AS ss GROUP BY ss.challenge_id) AS ss2
+    ON cha.challenge_id = ss2.challenge_id
+LEFT JOIN
+    (SELECT vs.challenge_id, SUM(vs.total_views) AS total_views, 
+            SUM(vs.total_unique_views) AS total_unique_views
+     FROM View_Stats AS vs 
+     GROUP BY vs.challenge_id) AS vs2
+    ON cha.challenge_id = vs2.challenge_id
 GROUP BY c.contest_id, c.hacker_id, c.name
-HAVING SUM(ss2.total_submissions) + 
-       SUM(ss2.total_accepted_submissions) + 
-       SUM(vs2.total_views) + 
-       SUM(vs2.total_unique_views) > 0;
+HAVING SUM(ss2.total_submissions) +
+       SUM(ss2.total_accepted_submissions) +
+       SUM(vs2.total_views) +
+       SUM(vs2.total_unique_views) > 0
+ORDER BY c.contest_id;
 ```
