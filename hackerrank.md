@@ -355,3 +355,35 @@ HAVING SUM(ss2.total_submissions) +
        SUM(vs2.total_unique_views) > 0
 ORDER BY c.contest_id;
 ```
+
+15 Days of Learning SQL 
+- advanced join
+
+- the second column is the hardest to query: want to find the number of hackers who have continuously submitted at least once per day since the first day
+    - `WHERE s1.submission_date = dates.submission_date` filters for unique contest dates
+    - `AND` filters for ??? comparing day 2 vs day 1 ???
+          - `DATEDIFF` returns the number of days between two date values
+```
+SELECT 
+    submission_date,
+(SELECT COUNT(distinct hacker_id)  
+ FROM Submissions hackerCount  
+ WHERE hackerCount.submission_date = dates.submission_date 
+ AND (SELECT 
+        COUNT(distinct submissionCount.submission_date) 
+      FROM Submissions submissionCount 
+      WHERE submissionCount.hacker_id = hackerCount.hacker_id 
+      AND submissionCount.submission_date < dates.submission_date) 
+                = dateDIFF(dates.submission_date , '2016-03-01')
+     ),
+(SELECT hacker_id  
+    FROM submissions hackerList 
+    WHERE hackerList.submission_date = dates.submission_date 
+    GROUP BY hacker_id 
+    ORDER BY count(submission_id) DESC , hacker_id limit 1) as topHack,
+(SELECT name 
+    FROM hackers 
+    WHERE hacker_id = topHack)
+FROM (SELECT distinct submission_date from submissions) AS dates
+GROUP BY submission_date
+```
